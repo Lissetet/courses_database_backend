@@ -1,4 +1,5 @@
 'use strict';
+
 const { Model, DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
@@ -54,6 +55,11 @@ module.exports = (sequelize) => {
       foreignKey: {
         fieldName: 'userId',
         allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'A user ID is required'
+          },
+        },
       },
     });
   };
