@@ -1,6 +1,7 @@
 'use strict';
+
 const { Model, DataTypes } = require('sequelize');
-// const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 module.exports = (sequelize) => {
   class User extends Model {}
@@ -47,6 +48,10 @@ module.exports = (sequelize) => {
     password: {
       type: DataTypes.STRING,  
       allowNull: false,
+      set(val) {
+        const hashedPassword = bcrypt.hashSync(val, 10);
+        this.setDataValue('password', hashedPassword);
+      },
       validate: {
         notNull: {
           msg: 'A password is required'
@@ -54,27 +59,8 @@ module.exports = (sequelize) => {
         notEmpty: {
           msg: 'Please provide a password'
         },
-        len: {
-          args: [8, 20],
-          msg: 'The password should be between 8 and 20 characters in length'
-        }
       }
     },
-    // confirmedPassword: {
-    //   type: DataTypes.STRING,
-    //   allowNull: false,
-    //   set(val) {
-    //     if ( val === this.password ) {
-    //       const hashedPassword = bcrypt.hashSync(val, 10);
-    //       this.setDataValue('confirmedPassword', hashedPassword);
-    //     }
-    //   },
-    //   validate: {
-    //     notNull: {
-    //       msg: 'Both passwords must match'
-    //     }
-    //   }
-    // }
   }, { sequelize });
 
   User.associate = (models) => {
