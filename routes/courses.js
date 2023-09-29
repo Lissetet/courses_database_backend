@@ -35,7 +35,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
     attributes,
     include
   });
-  res.json(course);
+  course ? res.json(course) : res.status(404).end();
 }));
 
 router.post('/', authenticateUser, asyncHandler(async (req, res) => {
